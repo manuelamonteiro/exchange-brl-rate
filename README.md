@@ -1,59 +1,51 @@
-# BrlExchangeRate
+# BRL Exchange Rate
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.19.
+Uma aplicação web em Angular para consultar a cotação de qualquer moeda estrangeira em relação ao Real (BRL). O app consome uma API pública, exibe a cotação atual e mostra um histórico visual dos últimos 30 dias com variação percentual dia a dia.
 
-## Development server
+## Principais funcionalidades
+- Busca por código de moeda (ex.: USD, EUR, GBP) e cálculo do par `MOEDA/BRL`.
+- Exibição da cotação atual com data/hora da última atualização.
+- Histórico dos últimos 30 dias com valores de abertura, máxima, mínima, fechamento e variação percentual diária.
+- Limpeza rápida do formulário ao clicar no logo para começar uma nova consulta.
 
-To start a local development server, run:
+## Stack
+- Angular 19 (componentes standalone + roteamento).
+- Tailwind CSS 4 para estilização (`src/styles.scss`).
+- HttpClient + RxJS para integrações com a API.
 
+## Pré-requisitos
+- Node.js 20+ e npm instalados.
+- Não é necessário Angular CLI global; os scripts do `package.json` já usam a CLI local.
+
+## Configuração da API
+O app utiliza `apiBaseUrl` e `apiKey` definidos em `src/environments/environment.ts`.
+
+Se quiser usar outra chave/endpoint, ajuste esse arquivo antes de rodar o projeto.
+
+## Como instalar e rodar localmente
+1. Instale dependências:
+   ```bash
+   npm install
+   ```
+2. Suba o servidor de desenvolvimento (porta padrão 4200):
+   ```bash
+   npm start
+   ```
+3. Abra http://localhost:4200/ no navegador (há redirecionamento automático para `/exchange-brl`).
+4. Digite o código da moeda e clique em “EXCHANGE RESULT”. A cotação atual e o histórico serão carregados.
+
+## Build para produção
+Gera artefatos otimizados em `dist/brl-exchange-rate/`:
 ```bash
-ng serve
+npm run build
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Estrutura essencial
+- `src/app/exchange-brl/` – página principal e componentes (formulário, header/footer, resultado atual, histórico).
+- `src/service/api.ts` – serviço que chama a API de câmbio com `HttpClient`.
+- `src/models/brl-exchange.models.ts` – tipos usados nas respostas e view models.
+- `src/environments/environment.ts` – configuração do endpoint e chave da API.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Scripts disponíveis
+- `npm start` – servidor de desenvolvimento.
+- `npm run build` – build de produção.
