@@ -1,1 +1,15 @@
-/* You can add global styles to this file, and also import other style files */
+@use "tailwindcss";
+
+:root {
+  --color-primary: #07B0FB;
+}
+
+@layer utilities {
+  .text-primary {
+    color: var(--color-primary);
+  }
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+}

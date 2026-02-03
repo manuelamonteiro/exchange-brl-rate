@@ -1,0 +1,18 @@
+<div class="min-h-screen">
+  <app-exchange-header data-cy="header" (logoClick)="onReset()"></app-exchange-header>
+
+  <main class="pt-6 pb-[50px]">
+    <div class="mx-auto w-full max-w-[360px] md:max-w-[600px] lg:max-w-[800px] px-[15px]">
+      <app-currency-form [loading]="loading" [defaultValue]="fromSymbol"
+        (submitCode)="onSearch($event)"></app-currency-form>
+
+      <app-exchange-current-result *ngIf="current && current.lastUpdatedAt" [pairLabel]="current.pairLabel"
+        [lastUpdatedAt]="current.lastUpdatedAt" [exchangeRate]="current.exchangeRate"></app-exchange-current-result>
+
+      <app-exchange-history-accordion *ngIf="current && history.length"
+        [items]="history"></app-exchange-history-accordion>
+    </div>
+  </main>
+
+  <app-exchange-footer data-cy="footer"></app-exchange-footer>
+</div>

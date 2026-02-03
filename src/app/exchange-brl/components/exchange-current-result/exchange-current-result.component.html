@@ -1,0 +1,24 @@
+<section class="border-t border-[#E5E5E5] pt-6 mb-8" data-cy="current-section">
+  <div class="mb-4 flex items-start justify-between gap-4">
+    <div class="min-w-0">
+      <p class="text-[18px] leading-[22px] font-semibold text-[#262626]">
+        Exchange rate now
+      </p>
+
+      <p class="mt-1 text-[12px] leading-[16px] text-[#333333]" data-cy="current-datetime">
+        {{ lastUpdatedAtDate | date:"dd/MM/yyyy - HH'h'mm" }}
+      </p>
+    </div>
+
+    <div class="shrink-0 text-right uppercase text-[#07B0FB]
+           font-bold text-[24px] leading-[30px]" data-cy="current-pair">
+      {{ pairLabel }}
+    </div>
+  </div>
+
+  <div class="mx-auto w-full max-w-[330px] bg-[#E7F8FF] min-h-[72px] flex items-center justify-center">
+    <span class="text-[#07B0FB] text-[28px] leading-none font-bold" data-cy="current-rate-value">
+      {{ exchangeRate | currency:'BRL':'symbol':'1.2-4' }}
+    </span>
+  </div>
+</section>

@@ -1,0 +1,26 @@
+<div class="mb-8">
+  <div class="mx-auto w-full max-w-[330px] relative">
+    <label *ngIf="ctrl.value" class="absolute left-4 top-1 text-[11px] text-[#07B0FB]">Enter the currency code</label>
+    <input data-cy="currency-input" type="text" [formControl]="ctrl" placeholder="Enter the currency code" class="w-full h-[56px]
+             bg-[#EDEDED]
+             pt-4 pb-2 px-4
+             border-0 border-b-2 border-[#E5E5E5]
+             outline-none
+             text-[14px] text-[#333333] placeholder:text-black
+             focus:border-[#07B0FB]" />
+  </div>
+</div>
+
+<div class="mb-10">
+  <div class="mx-auto w-full max-w-[330px]">
+    <button data-cy="exchange-submit" type="button" (click)="onSubmit()" [disabled]="loading" class="w-full h-[56px]
+             rounded-full
+             bg-[#07B0FB] text-white
+             uppercase text-[14px] font-medium tracking-wide
+             hover:opacity-95
+             cursor-pointer
+             disabled:opacity-50 disabled:cursor-not-allowed">
+      {{ loading ? 'LOADING...' : 'EXCHANGE RESULT' }}
+    </button>
+  </div>
+</div>
