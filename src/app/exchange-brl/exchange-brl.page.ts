@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
@@ -26,6 +27,9 @@ import { ExchangeHistoryAccordionComponent } from './components/exchange-history
 export class ExchangeBrlPage {
   loading = false;
   errorMsg: string | null = null;
+
+  private readonly invalidCurrencyMsg = 'Invalid currency code. Please type a valid code (e.g., USD, EUR, GBP).';
+  private readonly rateLimitMsg = 'API rate limit reached (5/min, 500/day). Please wait and try again later.';
 
   readonly currentYear = new Date().getFullYear();
 
@@ -59,6 +63,16 @@ export class ExchangeBrlPage {
     try {
       const current = await firstValueFrom(this.api.getCurrentExchangeRate(from, 'BRL'));
 
+      if (current?.success === false) {
+        this.errorMsg = this.invalidCurrencyMsg;
+        return;
+      }
+
+      if (current?.rateLimitExceeded) {
+        this.errorMsg = this.rateLimitMsg;
+        return;
+      }
+
       const lastUpdated = current?.lastUpdatedAt ?? '';
       const tempCurrent: CurrentVM = {
         exchangeRate: current?.exchangeRate ?? 0,
@@ -87,9 +101,52 @@ export class ExchangeBrlPage {
       this.history = tempHistory;
       this.fromSymbol = from;
     } catch (e) {
-      this.errorMsg = 'Failed to load exchange rates. Try again.';
+      this.errorMsg = this.isRateLimitError(e)
+        ? this.rateLimitMsg
+        : this.isInvalidCurrencyError(e)
+          ? this.invalidCurrencyMsg
+          : 'Failed to load exchange rates. Try again.';
     } finally {
       this.loading = false;
     }
+  }
+
+  private isRateLimitError(err: unknown): boolean {
+    if (err instanceof HttpErrorResponse) {
+      const status429 = err.status === 429;
+      const payload = typeof err.error === 'string' ? err.error : err.error ?? {};
+      const payloadFlag = typeof payload === 'object' && 'rateLimitExceeded' in payload && Boolean((payload as any).rateLimitExceeded);
+      const payloadMsg = typeof payload === 'string' ? payload : payload?.message ?? '';
+      const combinedMsg = `${payloadMsg} ${err.message}`.toLowerCase();
+      const textSuggestsLimit = combinedMsg.includes('rate') && combinedMsg.includes('limit');
+
+      return status429 || payloadFlag || textSuggestsLimit;
+    }
+
+    if (err instanceof Error) {
+      const msg = err.message.toLowerCase();
+      return msg.includes('rate limit');
+    }
+
+    return false;
+  }
+
+  private isInvalidCurrencyError(err: unknown): boolean {
+    if (err instanceof HttpErrorResponse) {
+      const statusSuggestsInvalid = [400, 404, 422].includes(err.status);
+      const payloadMsg = typeof err.error === 'string' ? err.error : err.error?.message ?? '';
+      const combinedMsg = `${payloadMsg} ${err.message}`.toLowerCase();
+      const textSuggestsInvalid = combinedMsg.includes('invalid') &&
+        (combinedMsg.includes('currency') || combinedMsg.includes('symbol') || combinedMsg.includes('code'));
+
+      return statusSuggestsInvalid || textSuggestsInvalid;
+    }
+
+    if (err instanceof Error) {
+      const msg = err.message.toLowerCase();
+      return msg.includes('invalid currency') || msg.includes('currency code');
+    }
+
+    return false;
   }
 }

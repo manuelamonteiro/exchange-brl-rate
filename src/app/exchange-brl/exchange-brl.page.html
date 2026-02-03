@@ -6,6 +6,10 @@
       <app-currency-form [loading]="loading" [defaultValue]="fromSymbol"
         (submitCode)="onSearch($event)"></app-currency-form>
 
+      <p *ngIf="errorMsg" class="mx-auto w-full max-w-[330px] mb-6 text-sm text-red-600 text-center" data-cy="error-message">
+        {{ errorMsg }}
+      </p>
+
       <app-exchange-current-result *ngIf="current && current.lastUpdatedAt" [pairLabel]="current.pairLabel"
         [lastUpdatedAt]="current.lastUpdatedAt" [exchangeRate]="current.exchangeRate"></app-exchange-current-result>
 

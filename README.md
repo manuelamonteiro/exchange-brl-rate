@@ -7,6 +7,9 @@ Uma aplicação web em Angular para consultar a cotação de qualquer moeda estr
 - Exibição da cotação atual com data/hora da última atualização.
 - Histórico dos últimos 30 dias com valores de abertura, máxima, mínima, fechamento e variação percentual diária.
 - Limpeza rápida do formulário ao clicar no logo para começar uma nova consulta.
+- Tratamento de erros de entrada e limite de uso da API:
+  - Moeda inválida: o app exibe a mensagem “Invalid currency code. Please type a valid code (e.g., USD, EUR, GBP).”.
+  - Limite da API: se atingir 5 chamadas/min ou 500/dia, mostra “API rate limit reached (5/min, 500/day). Please wait and try again later.”; basta aguardar e tentar novamente.
 
 ## Stack
 - Angular 19 (componentes standalone + roteamento).
