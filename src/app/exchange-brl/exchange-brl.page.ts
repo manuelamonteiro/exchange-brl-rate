@@ -60,16 +60,24 @@ export class ExchangeBrlPage {
       return;
     }
 
+    if (from.length < 3) {
+      this.errorMsg = 'Type at least 3 characters for the currency code (ex: USD, EUR...)';
+      this.loading = false;
+      return;
+    }
+
     try {
       const current = await firstValueFrom(this.api.getCurrentExchangeRate(from, 'BRL'));
 
       if (current?.success === false) {
         this.errorMsg = this.invalidCurrencyMsg;
+        this.loading = false;
         return;
       }
 
       if (current?.rateLimitExceeded) {
         this.errorMsg = this.rateLimitMsg;
+        this.loading = false;
         return;
       }
 
@@ -81,7 +89,6 @@ export class ExchangeBrlPage {
       };
 
       const daily = await firstValueFrom(this.api.getDailyExchangeRate(from, 'BRL'));
-
       const sorted = [...(daily?.data ?? [])].sort(
         (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
       );
